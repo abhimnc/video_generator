@@ -352,7 +352,8 @@ def validate_not_lfs_pointer(path: Path, label: str) -> None:
         parent = path.parent
         raise ValueError(
             f"{label} is a Git LFS pointer, not the downloaded model file: {path}. "
-            f"Run `git -C {parent} lfs pull` after accepting the model license and logging in."
+            f"Run `git lfs install`, `git -C {parent} lfs pull`, then `git -C {parent} lfs checkout` "
+            "after accepting the model license and logging in."
         )
 
 
@@ -368,7 +369,12 @@ def validate_model_files(args: argparse.Namespace) -> None:
             raise ValueError(f"--gemma-root does not exist or is not a directory: {args.gemma_root}")
         shards = sorted(args.gemma_root.glob("*.safetensors"))
         if not shards:
-            raise ValueError(f"--gemma-root does not contain any .safetensors shards: {args.gemma_root}")
+            raise ValueError(
+                f"--gemma-root does not contain any .safetensors shards: {args.gemma_root}. "
+                "This usually means the Gemma repository was copied or cloned without Git LFS model files. "
+                f"Run `git lfs install`, `git -C {args.gemma_root} lfs pull`, then "
+                f"`git -C {args.gemma_root} lfs checkout`."
+            )
         for shard in shards:
             validate_not_lfs_pointer(shard, "--gemma-root shard")
 

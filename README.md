@@ -167,7 +167,7 @@ python scripts/repo_to_video.py \
 
 If cloning fails with `403`, the Hugging Face account has not accepted the model license yet, or the terminal is not logged in with a token that has read access.
 
-If generation fails with `safetensors_rust.SafetensorError: Error while deserializing header: header too large`, the model directory probably contains Git LFS pointer files instead of the real model shards. Check the folder size and pull the large files:
+If generation says `--gemma-root does not contain any .safetensors shards`, the Gemma folder was cloned or copied without its LFS model files. If generation fails with `safetensors_rust.SafetensorError: Error while deserializing header: header too large`, the folder probably contains Git LFS pointer files instead of the real model shards. In both cases, check the folder size and pull/check out the large files:
 
 ```bash
 du -sh gemma-3-12b-it-qat-q4_0-unquantized
